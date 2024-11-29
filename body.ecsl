@@ -1,0 +1,39 @@
+<body>
+childs:
+    <container>
+    childs:
+        <Player>
+        components:
+            <Identity>
+                <property name="tag" value="main-player" />
+            </Identity>
+            <CanvasEntityIdentity>
+                <property name="layer" value="main-canvas-layer" />
+            </CanvasEntityIdentity>
+        </Player>
+    components:
+        <Identity>
+            <property name="tag" value="entities-container" />
+        </Identity>
+    </container>
+    <Canvas>
+    childs:
+        <CanvasLayer>
+        components:
+            <Identity>
+                <property name="tag" value="main-canvas-layer" />
+            </Identity>
+            <CanvasLayerData>
+                <property name="size" value=v"(512, 288)" />
+            </CanvasLayerData>
+        </CanvasLayer>
+    components:
+        <Identity>
+            <property name="tag" value="main-canvas" />
+        </Identity>
+        <Transform />
+        <CanvasData>
+            <property name="size" value=v"(512, 288)" />
+        </CanvasData>
+    </Canvas>
+</body>
