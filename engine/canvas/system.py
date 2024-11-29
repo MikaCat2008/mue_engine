@@ -42,10 +42,15 @@ class CanvasSystem(System):
         surface = self.canvases_surface[identity.tag]
         surface.fill((0, 0, 0))
 
-        # offset = self.offset
+        data = canvas.get_component(CanvasData)
+        offset = data.offset
 
         for layer in canvas.childs:
-            layer_system.render_chunks(layer, (0, 0), surface)
+            layer_system.render_chunks(layer, offset, surface)
+
+    def update_offset(self, canvas: Canvas, offset: tuple[int, int]) -> None:
+        data = canvas.get_component(CanvasData)
+        data.offset = offset
 
     def update(self, delta: float) -> None:
         for canvas in self.canvases.values():

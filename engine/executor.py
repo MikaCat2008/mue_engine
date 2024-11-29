@@ -1,4 +1,4 @@
-from time import time, sleep
+from time import time
 from typing import Optional
 
 from .core import Entity, System
@@ -19,7 +19,18 @@ class Executor:
             system.executor = self
 
         for system in self.systems:
+            system.load()
+
+        self.start_entity(self.body)
+
+        for system in self.systems:
             system.start()
+
+    def start_entity(self, entity: Entity) -> None:
+        entity.start()
+
+        for child in entity.childs:
+            self.start_entity(child)
 
     def loop(self) -> None:
         current_time = time()

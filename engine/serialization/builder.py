@@ -1,3 +1,4 @@
+from typing import Optional
 from collections import deque
 
 from .tokenizer import Tokenizer
@@ -5,6 +6,8 @@ from .syntax_tree import Node, SyntaxTree
 
 from ..core import Entity, Component
 from .factory import EntityFactory, ComponentFactory
+
+from engine.canvas import BuilderSprite, BuilderComponent_Sprites
 
 
 class Builder:
@@ -18,16 +21,51 @@ class Builder:
         self.tokenizer = Tokenizer()
         self.syntax_tree = SyntaxTree()
 
+    def get_properties(self, section: dict[Optional[str], deque[Node]]) -> dict[str, object]:
+        return {
+            child.attributes["name"]: child.attributes["value"]
+            for child in section
+            if child.name == "property"
+        }
+
+    def handle_section(self, name: str, entity: Entity, section: deque[Node]) -> None:
+        if name == "childs":
+            entity.childs = self.build_entities_from_nodes(section)
+        
+        elif name == "components":
+            for component in self.build_components_from_nodes(section):
+                entity.add_component(component)
+
+        elif name == "sprites":
+            component = BuilderComponent_Sprites()
+            
+            for node in section:
+                if node.name != "Sprite":
+                    continue
+
+                properties = self.get_properties(
+                    node.sections.get(None, deque())
+                )
+
+                z_index = properties.get("z_index", 0)
+                texture = properties.get("texture", "")
+                position = properties.get("position", (0, 0))
+                rotation = properties.get("rotation", 0)
+                sprite_tag = properties.get("sprite_tag", "")
+
+                component.sprites.append(
+                    BuilderSprite(
+                        z_index, texture, position, rotation, sprite_tag
+                    )
+                )
+
+            entity.add_component(component)
+
     def build_entity_from_node(self, node: Node) -> Entity:
         entity = self.entities.create(node.name)
 
-        childs = node.sections.get("childs", deque())
-        components = node.sections.get("components", deque())
-
-        entity.childs = self.build_entities_from_nodes(childs)
-        
-        for component in self.build_components_from_nodes(components):
-            entity.add_component(component)
+        for name, section in node.sections.items():
+            self.handle_section(name, entity, section)
 
         return entity
 
@@ -40,14 +78,11 @@ class Builder:
         return entities
 
     def build_component_from_node(self, node: Node) -> Component:
-        properties = {
-            child.attributes["name"]: child.attributes["value"]
-            for child in node.sections.get(None, deque())
-            if child.name == "property"
-        }
-
         return self.components.create(
-            node.name, **properties
+            node.name, 
+            **self.get_properties(
+                node.sections.get(None, deque())
+            )
         )
 
     def build_components_from_nodes(self, nodes: deque[Node]) -> deque[Component]:

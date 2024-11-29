@@ -1,13 +1,15 @@
 from typing import Optional
 
-from pygame.surface import Surface
-
 from engine.core import Entity
 
 from .layer import CanvasLayerSystem
 
 
 class CanvasEntity(Entity):
+    def start(self) -> None:
+        layer_system = CanvasLayerSystem()
+        layer_system.start_entity(self)
+
     def create_sprite(
         self, 
         z_index: int,
@@ -16,8 +18,8 @@ class CanvasEntity(Entity):
         rotation: int,
         sprite_tag: str
     ) -> None:
-        canvas_entity_system = CanvasLayerSystem()
-        canvas_entity_system.create_sprite(
+        layer_system = CanvasLayerSystem()
+        layer_system.create_sprite(
             self, z_index, texture, position, rotation, sprite_tag
         )
 
@@ -35,5 +37,5 @@ class CanvasEntity(Entity):
         )
 
     def remove_sprite(self, sprite_id: int) -> None:
-        canvas_entity_system = CanvasLayerSystem()
-        canvas_entity_system.remove_sprite(self, sprite_id)
+        layer_system = CanvasLayerSystem()
+        layer_system.remove_sprite(self, sprite_id)

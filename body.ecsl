@@ -3,6 +3,14 @@ childs:
     <container>
     childs:
         <Player>
+        sprites:
+            <Sprite>
+                <property name="z_index" value=v"0" />
+                <property name="texture" value="player.0" />
+                <property name="position" value=v"(100, 100)" />
+                <property name="rotation" value=v"0" />
+                <property name="sprite_tag" value="sprite" />
+            </Sprite>
         components:
             <Identity>
                 <property name="tag" value="main-player" />

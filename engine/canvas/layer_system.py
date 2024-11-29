@@ -16,6 +16,8 @@ from .logic import LayerData
 from .layer_data import CanvasLayerData
 from .entity_identity import CanvasEntityIdentity
 
+from .builder_component_sprite import BuilderComponent_Sprites
+
 
 class CanvasLayerSystem(System):
     layers: dict[str, LayerData]
@@ -39,6 +41,21 @@ class CanvasLayerSystem(System):
             self.layers[layer] = self._create_layer_data(layer)
         
         return self.layers[layer]
+
+    def start_entity(self, entity: CanvasEntity) -> None:
+        sprites = entity.get_component(BuilderComponent_Sprites)
+
+        for sprite in sprites.sprites:
+            self.create_sprite(
+                entity,
+                sprite.z_index,
+                sprite.texture,
+                sprite.position,
+                sprite.rotation,
+                sprite.sprite_tag            
+            )
+
+        entity.remove_component(BuilderComponent_Sprites)
 
     def create_sprite(
         self, 

@@ -13,6 +13,9 @@ class System(Singleton):
 
     _instance: System
 
+    def load(self) -> None:
+        ...
+
     def start(self) -> None:
         ...
     

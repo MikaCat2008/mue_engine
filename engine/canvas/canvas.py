@@ -9,6 +9,10 @@ from .system import CanvasSystem
 class Canvas(Entity):
     childs: deque[CanvasLayer]
 
-    def add_to_system(self) -> None:
+    def start(self) -> None:
         system = CanvasSystem()
         system.add_canvas(self)
+
+    def update_offset(self, offset: tuple[int, int]) -> None:
+        system = CanvasSystem()
+        system.update_offset(self, offset)

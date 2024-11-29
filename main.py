@@ -19,10 +19,10 @@ from engine.base import (
 )
 
 from engine.base.systems import SearchSystem, ResourcesSystem
-from engine.base.components import Transform
 
 from engine.canvas import (
     Canvas,
+    CanvasData,
     CanvasEntity,
 
     ENTITIES as CANVAS_ENTITIES,
@@ -36,29 +36,29 @@ class Player(CanvasEntity):
 
 
 class StartSystem(System):
+    canvas: Canvas
     player: Player
     player_position: tuple[int, int]
 
-    def start(self) -> None:
-        search = SearchSystem()
+    def load(self) -> None:
         resources = ResourcesSystem()
-
         resources.load_texture("player.0", "assets/player/0.png")
 
-        canvas: Canvas = search.search_by_tag("main-canvas")
-        canvas.add_to_system()
+    def start(self) -> None:
+        search = SearchSystem()
 
-        player: Player = search.search_by_tag("main-player")
-        player.create_sprite(
-            0, "player.0", (100, 100), 0, "sprite"
-        )
-
-        self.player = player
+        self.canvas = search.search_by_tag("main-canvas")
+        self.player = search.search_by_tag("main-player")
         self.player_position = 100, 100
 
     def update(self, delta: float) -> None:
+        data = self.canvas.get_component(CanvasData)
+        ox, oy = data.offset
+
         px, py = self.player_position
         mx, my = get_pos()
+        mx += ox
+        my += oy
 
         ax, ay = 0, 0
         speed = 100 * delta
@@ -74,12 +74,15 @@ class StartSystem(System):
             ay += speed
 
         position = px + ax, py + ay
+        ix, iy = int(position[0]), int(position[1])
+
         rotation = atan2(py - my, mx - px) * 180 / pi
 
+        self.canvas.update_offset((ix - 512 // 2, iy - 288 // 2))
         self.player.update_sprite(
             "sprite", 
             texture="player.0", 
-            position=(int(position[0]), int(position[1])), 
+            position=(ix, iy), 
             rotation=rotation
         )
         self.player_position = position

@@ -24,12 +24,8 @@ class PygameExecutor(Executor):
     ) -> None:
         super().__init__(body, systems)
 
-        self.max_ups = max_ups
-
-    def start(self) -> None:
         self.screen = set_mode((512, 288), pg.SCALED | pg.DOUBLEBUF | pg.FULLSCREEN)
-
-        super().start()
+        self.max_ups = max_ups
 
     def loop(self) -> None:
         clock = Clock()

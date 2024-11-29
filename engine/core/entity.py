@@ -17,8 +17,14 @@ class Entity:
         self.childs = deque()
         self.components = {}
 
+    def start(self) -> None:
+        ...
+
     def add_component(self, component: Component) -> None:
         self.components[type(component).__name__] = component
 
     def get_component(self, component: Type[ComponentType]) -> Optional[ComponentType]:
         return self.components.get(component.__name__)
+
+    def remove_component(self, component: Type[ComponentType]) -> None:
+        del self.components[component.__name__]
