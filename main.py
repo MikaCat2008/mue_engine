@@ -25,6 +25,8 @@ from engine.canvas import (
     CanvasData,
     CanvasEntity,
 
+    handle_sprites_section,
+
     ENTITIES as CANVAS_ENTITIES,
     COMPONENTS as CANVAS_COMPONENTS,
     SYSTEMS as CANVAS_SYSTEMS
@@ -99,6 +101,8 @@ component_factory.extend(BASE_COMPONENTS | CANVAS_COMPONENTS)
 text = open("body.ecsl").read()
 
 builder = Builder(entity_factory, component_factory)
+builder.add_section_handler("sprites", handle_sprites_section)
+
 body = builder.build_entities_from_text(text)[0]
 
 executor = PygameExecutor(body, systems=BASE_SYSTEMS + CANVAS_SYSTEMS + [

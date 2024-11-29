@@ -1,11 +1,11 @@
 from __future__ import annotations
 
-from typing import Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING
 
-from ..singleton import Singleton
+from engine.singleton import Singleton
 
 if TYPE_CHECKING:
-    from ..executor import Executor
+    from engine.executor import Executor
 
 
 class System(Singleton):

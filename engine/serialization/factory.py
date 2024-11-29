@@ -1,6 +1,6 @@
 from typing import Type
 
-from ..core import Entity, Component
+from engine.core import Entity, Component
 
 
 class EntityFactory:

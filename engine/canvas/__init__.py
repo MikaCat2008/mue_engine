@@ -9,6 +9,7 @@ from .layer_system import CanvasLayerSystem as CanvasLayerSystem
 from .entity import CanvasEntity as CanvasEntity
 from .entity_identity import CanvasEntityIdentity as CanvasEntityIdentity
 
+from .tools import handle_sprites_section as handle_sprites_section
 from .builder_component_sprite import (
     BuilderSprite as BuilderSprite,
     BuilderComponent_Sprites as BuilderComponent_Sprites
