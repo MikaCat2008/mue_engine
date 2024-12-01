@@ -76,6 +76,10 @@ class StartSystem(System):
 
         # structures
 
+        resources.load_texture("structures.bed", "assets/structures/bed.png")
+        resources.load_texture("structures.table", "assets/structures/table.png")
+        resources.load_texture("structures.carpet", "assets/structures/carpet.png")
+        resources.load_texture("structures.closet", "assets/structures/closet.png")
         resources.load_texture("structures.bath_tub", "assets/structures/bath_tub.png")
         resources.load_texture("structures.nightstand", "assets/structures/nightstand.png")
 
@@ -287,7 +291,12 @@ class TilesSystem(System):
 class StructuresSystem(System):
     def start(self) -> None:
         self.structures = {
-            (10, 5): "bath_tub",
+            (10, 5): "bed",
+            (13, 5): "table",
+            (16, 5): "carpet",
+            (19, 5): "closet",
+            (22, 5): "bath_tub",
+            (25, 5): "nightstand",
 
             (2, 4): "nightstand",
             (3, 4): "nightstand",
