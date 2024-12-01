@@ -21,7 +21,7 @@ def handle_sprites_section(entity: Entity, section: deque[Node]) -> None:
         texture = properties.get("texture", "")
         position = properties.get("position", (0, 0))
         rotation = properties.get("rotation", 0)
-        sprite_tag = properties.get("sprite_tag", "")
+        sprite_tag = properties.get("sprite_tag", "sprite")
 
         component.sprites.append(
             BuilderSprite(

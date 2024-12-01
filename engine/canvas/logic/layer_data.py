@@ -15,12 +15,14 @@ class LayerData:
     chunks: dict[tuple[int, int], RenderChunk]
     sprites: dict[int, Sprite]
     surface: Surface
+    centrize: bool
 
-    def __init__(self, size: tuple[int, int]) -> None:
+    def __init__(self, size: tuple[int, int], centrize: bool) -> None:
         self.tiles = {}
         self.chunks = {}
         self.sprites = {}
         self.surface = Surface(size, pg.SRCALPHA)
+        self.centrize = centrize
 
     def create_sprite(
         self, 
@@ -75,8 +77,9 @@ class LayerData:
         x, y = sprite.position
         w, h = sprite.surface.get_size()
 
-        x -= w // 2
-        y -= h // 2
+        if self.centrize:
+            x -= w // 2
+            y -= h // 2
 
         min_x = x // 16
         min_y = y // 16
@@ -148,7 +151,7 @@ class LayerData:
             tile.requires_render = False
 
         for chunk, tiles in requires_render_chunks.items():
-            self.chunks[chunk].render_tiles(tiles)
+            self.chunks[chunk].render_tiles(tiles, self.centrize)
 
         self.tiles = {
             position: tile
@@ -159,7 +162,7 @@ class LayerData:
     def render_chunks(self, offset: tuple[int, int]) -> None:
         ox, oy = offset
 
-        self.surface.fill((0, 0, 0))
+        self.surface.fill((0, 0, 0, 0))
         self.surface.fblits(
             (
                 chunk.surface,

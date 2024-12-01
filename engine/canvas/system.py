@@ -14,6 +14,7 @@ if TYPE_CHECKING:
     from .canvas import Canvas
 
 from .data import CanvasData
+from .layer_data import CanvasLayerData
 from .layer_system import CanvasLayerSystem
 
 
@@ -40,12 +41,15 @@ class CanvasSystem(System):
             layer_system.update_tiles(layer)
 
         surface = self.canvases_surface[identity.tag]
-        surface.fill((0, 0, 0))
+        surface.fill((0, 0, 0, 0))
 
         data = canvas.get_component(CanvasData)
         offset = data.offset
 
-        for layer in canvas.childs:
+        for layer in sorted(
+            canvas.childs, 
+            key=lambda layer: layer.get_component(CanvasLayerData).z_index
+        ):
             layer_system.render_chunks(layer, offset, surface)
 
     def update_offset(self, canvas: Canvas, offset: tuple[int, int]) -> None:

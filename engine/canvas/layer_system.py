@@ -31,7 +31,7 @@ class CanvasLayerSystem(System):
         layer = search.search_by_tag(layer_tag)
         layer_data = layer.get_component(CanvasLayerData)
         
-        return LayerData(layer_data.size)
+        return LayerData(layer_data.size, layer_data.use_sprite_centrize)
 
     def _get_layer_data(self, entity: CanvasEntity) -> LayerData:
         identity = entity.get_component(CanvasEntityIdentity)
@@ -44,6 +44,9 @@ class CanvasLayerSystem(System):
 
     def start_entity(self, entity: CanvasEntity) -> None:
         sprites = entity.get_component(BuilderComponent_Sprites)
+
+        if sprites is None:
+            return
 
         for sprite in sprites.sprites:
             self.create_sprite(
@@ -112,8 +115,14 @@ class CanvasLayerSystem(System):
 
     def update_tiles(self, layer: CanvasLayer) -> None:
         identity = layer.get_component(Identity)
+        tag = identity.tag
 
-        self.layers[identity.tag].update_tiles()
+        if tag not in self.layers:
+            layer_data = layer.get_component(CanvasLayerData)
+
+            self.layers[tag] = LayerData(layer_data.size, layer_data.use_sprite_centrize)
+
+        self.layers[tag].update_tiles()
 
     def render_chunks(
         self, 
@@ -122,6 +131,10 @@ class CanvasLayerSystem(System):
         canvas_surface: Surface 
     ) -> None:
         identity = layer.get_component(Identity)
+        canvas_layer_data = layer.get_component(CanvasLayerData)
+
+        if not canvas_layer_data.use_offset:
+            offset = 0, 0
 
         layer_data = self.layers[identity.tag]
         layer_data.render_chunks(offset)

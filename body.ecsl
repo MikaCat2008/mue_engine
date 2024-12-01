@@ -1,38 +1,83 @@
 <body>
 childs:
-    <container>
-    childs:
-        <Player>
-        sprites:
-            <Sprite>
-                <property name="z_index" value=v"0" />
-                <property name="texture" value="player.0" />
-                <property name="position" value=v"(100, 100)" />
-                <property name="rotation" value=v"0" />
-                <property name="sprite_tag" value="sprite" />
-            </Sprite>
-        components:
-            <Identity>
-                <property name="tag" value="main-player" />
-            </Identity>
-            <CanvasEntityIdentity>
-                <property name="layer" value="main-canvas-layer" />
-            </CanvasEntityIdentity>
-        </Player>
-    components:
-        <Identity>
-            <property name="tag" value="entities-container" />
-        </Identity>
-    </container>
     <Canvas>
     childs:
         <CanvasLayer>
+        childs:
+            <InventoryBar>
+            components:
+                <Identity>
+                    <property name="tag" value="inventory-bar" />
+                </Identity>
+                <CanvasEntityIdentity>
+                    <property name="layer" value="ui-layer" />
+                </CanvasEntityIdentity>
+            </InventoryBar>
         components:
             <Identity>
-                <property name="tag" value="main-canvas-layer" />
+                <property name="tag" value="ui-layer" />
             </Identity>
             <CanvasLayerData>
                 <property name="size" value=v"(512, 288)" />
+                <property name="z_index" value=v"3" />
+                <property name="use_offset" value=v"False" />
+            </CanvasLayerData>
+        </CanvasLayer>
+        <CanvasLayer>
+        childs:
+            <Player>
+            sprites:
+                <Sprite>
+                    <property name="texture" value="entity.player" />
+                    <property name="position" value=v"(16, 16)" />
+                    <property name="sprite_tag" value="sprite" />
+                </Sprite>
+            components:
+                <Identity>
+                    <property name="tag" value="main-player" />
+                </Identity>
+                <CanvasEntityIdentity>
+                    <property name="layer" value="main-layer" />
+                </CanvasEntityIdentity>
+            </Player>
+        components:
+            <Identity>
+                <property name="tag" value="main-layer" />
+            </Identity>
+            <CanvasLayerData>
+                <property name="size" value=v"(512, 288)" />
+                <property name="z_index" value=v"2" />
+            </CanvasLayerData>
+        </CanvasLayer>
+        <CanvasLayer>
+        components:
+            <Identity>
+                <property name="tag" value="structures-layer" />
+            </Identity>
+            <CanvasLayerData>
+                <property name="size" value=v"(512, 288)" />
+                <property name="z_index" value=v"1" />
+                <property name="use_sprite_centrize" value=v"False" />
+            </CanvasLayerData>
+        </CanvasLayer>
+        <CanvasLayer>
+        childs:
+            <Tiles>
+            components:
+                <Identity>
+                    <property name="tag" value="tiles" />
+                </Identity>
+                <CanvasEntityIdentity>
+                    <property name="layer" value="tiles-layer" />
+                </CanvasEntityIdentity>
+            </Tiles>
+        components:
+            <Identity>
+                <property name="tag" value="tiles-layer" />
+            </Identity>
+            <CanvasLayerData>
+                <property name="size" value=v"(512, 288)" />
+                <property name="z_index" value=v"0" />
             </CanvasLayerData>
         </CanvasLayer>
     components:
