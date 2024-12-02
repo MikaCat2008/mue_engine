@@ -10,6 +10,7 @@ from .systems import (
     TimerSystem,
     SearchSystem,
     RenderSystem,
+    BuilderSystem,
     ResourcesSystem
 )
 
@@ -28,5 +29,6 @@ SYSTEMS = [
     TimerSystem(),
     SearchSystem(),
     RenderSystem(),
+    BuilderSystem(),
     ResourcesSystem()
 ]

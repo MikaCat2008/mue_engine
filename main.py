@@ -8,21 +8,13 @@ from pygame.key import get_pressed as get_key_pressed
 from pygame.mouse import get_pos, get_pressed as get_mouse_pressed
 
 from engine.core import System
-from engine.serialization.factory import EntityFactory, ComponentFactory
-from engine.serialization import Builder
-
-from pygame_executor import PygameExecutor
-
 from engine.base import (
     ENTITIES as BASE_ENTITIES, 
     COMPONENTS as BASE_COMPONENTS, 
     SYSTEMS as BASE_SYSTEMS
 )
-
-from engine.base.systems import SearchSystem, ResourcesSystem
-
+from engine.base.systems import SearchSystem, BuilderSystem, ResourcesSystem
 from engine.canvas import (
-    Canvas,
     CanvasData,
     CanvasEntity,
 
@@ -32,6 +24,8 @@ from engine.canvas import (
     COMPONENTS as CANVAS_COMPONENTS,
     SYSTEMS as CANVAS_SYSTEMS
 )
+
+from pygame_executor import PygameExecutor
 
 
 class Tiles(CanvasEntity):
@@ -326,6 +320,8 @@ class StructuresSystem(System):
         self.create_sprites()
 
     def create_sprites(self) -> None:
+        builder = BuilderSystem()
+
         for i, ((x, y), structure) in enumerate(self.structures.items()):
             x, y = position = x * 16, y * 16
 
@@ -357,32 +353,31 @@ class StructuresSystem(System):
             )   
 
 
-entity_factory = EntityFactory()
-entity_factory.extend(BASE_ENTITIES | CANVAS_ENTITIES | {
-    "Tiles": Tiles,
-    "Player": Player,
-    "Structure": Structure,
-    "InventoryBar": InventoryBar
-})
+def main() -> None:
+    builder = BuilderSystem()
+    builder.extend_entities(BASE_ENTITIES | CANVAS_ENTITIES | {
+        "Tiles": Tiles,
+        "Player": Player,
+        "Structure": Structure,
+        "InventoryBar": InventoryBar
+    })
+    builder.extend_components(BASE_COMPONENTS | CANVAS_COMPONENTS)
+    builder.add_section_handler("sprites", handle_sprites_section)
 
-component_factory = ComponentFactory()
-component_factory.extend(BASE_COMPONENTS | CANVAS_COMPONENTS)
+    text = open("body.ecsl").read()
+    body = builder.build_entities_from_text(text)[0]
 
-text = open("body.ecsl").read()
+    executor = PygameExecutor(body, systems=BASE_SYSTEMS + CANVAS_SYSTEMS + [
+        StartSystem(),
+        TilesSystem(),
+        StructuresSystem(),
+        InventoryBarSystem(),
+        PlayerMovementSystem(),
+        PlayerRotationSystem(),
+        CameraFollowingSystem(),
+        PlayerControllerSystem()
+    ], max_ups=2400)
+    executor.run()
 
-builder = Builder(entity_factory, component_factory)
-builder.add_section_handler("sprites", handle_sprites_section)
 
-body = builder.build_entities_from_text(text)[0]
-
-executor = PygameExecutor(body, systems=BASE_SYSTEMS + CANVAS_SYSTEMS + [
-    StartSystem(),
-    TilesSystem(),
-    StructuresSystem(),
-    InventoryBarSystem(),
-    PlayerMovementSystem(),
-    PlayerRotationSystem(),
-    CameraFollowingSystem(),
-    PlayerControllerSystem(),
-], max_ups=2400)
-executor.run()
+main()
