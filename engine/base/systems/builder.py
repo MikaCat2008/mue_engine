@@ -2,8 +2,8 @@ from typing import Type, Callable
 from collections import deque
 
 from engine.core import Entity, Component, System
-from engine.serialization import Builder
-from engine.serialization.factory import EntityFactory, ComponentFactory
+from engine.ecsl import Builder
+from engine.ecsl.factory import EntityFactory, ComponentFactory
 
 
 class BuilderSystem(System):

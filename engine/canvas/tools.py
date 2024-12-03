@@ -1,7 +1,7 @@
 from collections import deque
 
 from engine.core import Entity
-from engine.serialization import Node, get_properties
+from engine.ecsl import Node, get_properties
 
 from .builder_component_sprite import BuilderSprite, BuilderComponent_Sprites
 
